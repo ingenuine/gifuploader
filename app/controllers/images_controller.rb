@@ -1,10 +1,10 @@
 class ImagesController < ApplicationController
-  before_action :set_image, only: %i[ show edit update destroy ]
-  before_action :authenticate_user!, except: [:index, :show]
+  before_action :set_image, only: %i[ show edit update destroy share ]
+  before_action :authenticate_user!, except: [:index, :show, :share]
 
   # GET /images or /images.json
   def index
-    @q = Image.includes(:tags).ransack(params[:q])
+    @q = Image.includes(:tags).order(view_count: :desc).ransack(params[:q])
     @pagy, @images = pagy(@q.result, items: 5)
   end
 
@@ -12,9 +12,14 @@ class ImagesController < ApplicationController
   def show
   end
 
+  def share
+    @image.increment! :view_count
+    redirect_to @image.file_url
+  end
+
   # GET /images/new
   def new
-    @image = Image.new
+    @image = current_user.images.new
   end
 
   # GET /images/1/edit
@@ -23,7 +28,7 @@ class ImagesController < ApplicationController
 
   # POST /images or /images.json
   def create
-    @image = Image.new(image_params)
+    @image = current_user.images.new(image_params)
 
     respond_to do |format|
       if @image.save

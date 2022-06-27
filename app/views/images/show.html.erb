@@ -4,9 +4,11 @@
 <p>Tags: <%= @image.tags.pluck(:name).join(', ') %></p>
 
 <div>
-  <%= link_to "Edit this image", edit_image_path(@image) %> |
+  <% if user_signed_in? %>
+    <%= link_to "Edit this image", edit_image_path(@image) %> |
+    <%= button_to "Destroy this image", @image, method: :delete %>
+  <% end %>
   <%= link_to "Back to images", images_path %>
   <%= link_to t(:add_tag), [:new, @image, :tag] %>
-
-  <%= button_to "Destroy this image", @image, method: :delete %>
+  <%= link_to t(:share), [:share, @image] %>
 </div>
