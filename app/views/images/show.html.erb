@@ -1,0 +1,12 @@
+<p style="color: green"><%= notice %></p>
+
+<%= render @image %>
+<p>Tags: <%= @image.tags.pluck(:name).join(', ') %></p>
+
+<div>
+  <%= link_to "Edit this image", edit_image_path(@image) %> |
+  <%= link_to "Back to images", images_path %>
+  <%= link_to t(:add_tag), [:new, @image, :tag] %>
+
+  <%= button_to "Destroy this image", @image, method: :delete %>
+</div>

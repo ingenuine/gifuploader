@@ -1,0 +1,5 @@
+<%= search_form_for @q do |f| %>
+
+<%= f.collection_select :tags_id_eq, Tag.all, :id, :name %>
+<%= f.submit %>
+<% end %>
